@@ -4,12 +4,12 @@ end
 
 class Array
   def hash
-    str = ""
-    self.each_with_index do |el, idx|
-      str += (el.to_s + idx.to_s)
-    end
 
-    str.to_i.hash.to_i
+    accum = 0
+    self.each_with_index do |el, idx|
+      accum = (el.hash + idx.hash) ^ accum.hash
+    end
+    accum
   end
 end
 
@@ -29,18 +29,6 @@ class Hash
   # This returns 0 because rspec will break if it returns nil
   # Make sure to implement an actual Hash#hash method
   def hash
-    arr = []
-    self.to_a.sort.each_with_index do |tuple, idx|
-      tuple << idx
-      arr << tuple.map {|el| el.to_s}
-    end
-    arr.flatten.join.hash.to_i
-    # arr.join.str = ""
-    # self.each_with_index do |el, idx|
-    #   str += (el.to_s + idx.to_s)
-    # end
-
-    # str_arr.to_i.hash.to_i
-
+    self.to_a.sort_by(&:hash).hash
   end
 end
